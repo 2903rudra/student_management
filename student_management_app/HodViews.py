@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core import serializers
 import json
 
-from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport
-from .forms import AddStudentForm, EditStudentForm
+from student_management_app.models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport,Quiz,QuizQuestion
+from .forms import AddStudentForm, EditStudentForm ,AddQuizQuestionForm
 
 
 def admin_home(request):
@@ -780,7 +780,41 @@ def admin_profile_update(request):
         except:
             messages.error(request, "Failed to Update Profile")
             return redirect('admin_profile')
-    
+
+
+def add_quiz(request):
+    subjects = Subjects.objects.all()
+    context = {
+        "subjects": subjects
+    }
+    return render(request, 'hod_template/add_quiz_template.html', context)
+
+def add_quiz_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method!")
+        return redirect('add_quiz')
+    else:
+        subject_id = request.POST.get('subject')
+        quiz_name = request.POST.get('quiz_name')
+        total_marks = request.POST.get('total_marks')
+
+        try:
+            subject = Subjects.objects.get(id=subject_id)
+            quiz = Quiz(subject_id=subject, quiz_name=quiz_name, total_marks=total_marks)
+            quiz.save()
+            subject.quizzes.add(quiz)
+            messages.success(request, "Quiz Added Successfully!")
+            return redirect('add_quiz')
+        except:
+            messages.error(request, "Failed to Add Quiz!")
+            return redirect('add_quiz')
+
+def manage_quizzes(request):
+    quizzes = Quiz.objects.all()
+    context = {
+        "quizzes": quizzes
+    }
+    return render(request, 'hod_template/manage_quizzes_template.html', context)
 
 
 def staff_profile(request):
@@ -789,6 +823,100 @@ def staff_profile(request):
 
 def student_profile(requtest):
     pass
+
+
+def add_quiz_question(request):
+    if request.method == 'POST':
+        quiz_id = request.POST.get('quiz')
+        question_text = request.POST.get('question_text')
+        option1 = request.POST.get('option1')
+        option2 = request.POST.get('option2')
+        option3 = request.POST.get('option3')
+        option4 = request.POST.get('option4')
+        correct_option = request.POST.get('correct_option')
+
+        try:
+            quiz = Quiz.objects.get(id=quiz_id)
+
+            # Create and save the quiz question
+            question = QuizQuestion(
+                quiz=quiz,
+                question_text=question_text,
+                option1=option1,
+                option2=option2,
+                option3=option3,
+                option4=option4,
+                correct_option=correct_option
+            )
+            question.save()
+
+            messages.success(request, "Quiz Question Added Successfully!")
+            return redirect('add_quiz_question')
+        except Quiz.DoesNotExist:
+            messages.error(request, "Invalid Quiz Selection!")
+    else:
+        quizzes = Quiz.objects.all()
+
+        context = {
+            'quizzes': quizzes,
+        }
+
+        return render(request, 'hod_template/add_quiz_question_template.html', context)
+    
+def add_quiz_question_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method!")
+        return redirect('add_quiz_question')
+    else:
+        quiz_id = request.POST.get('quiz')
+        question_text = request.POST.get('question_text')
+        option1 = request.POST.get('option1')
+        option2 = request.POST.get('option2')
+        option3 = request.POST.get('option3')
+        option4 = request.POST.get('option4')
+        correct_option = request.POST.get('correct_option')
+
+        try:
+            quiz = Quiz.objects.get(id=quiz_id)
+
+            # Create and save the quiz question
+            question = QuizQuestion(
+                quiz=quiz,
+                question_text=question_text,
+                option1=option1,
+                option2=option2,
+                option3=option3,
+                option4=option4,
+                correct_option=correct_option
+            )
+            question.save()
+
+            messages.success(request, "Quiz Question Added Successfully!")
+            return redirect('add_quiz_question')
+        except Quiz.DoesNotExist:
+            messages.error(request, "Invalid Quiz Selection!")
+            return redirect('add_quiz_question')
+
+
+def add_quiz_save(request):
+    if request.method != "POST":
+        messages.error(request, "Invalid Method!")
+        return redirect('add_quiz')
+    else:
+        subject_id = request.POST.get('subject')
+        quiz_name = request.POST.get('quiz_name')
+        total_marks = request.POST.get('total_marks')
+
+        try:
+            subject = Subjects.objects.get(id=subject_id)
+            quiz = Quiz(subject_id=subject, quiz_name=quiz_name, total_marks=total_marks)
+            quiz.save()
+            subject.quizzes.add(quiz)
+            messages.success(request, "Quiz Added Successfully!")
+            return redirect('add_quiz')
+        except:
+            messages.error(request, "Failed to Add Quiz!")
+            return redirect('add_quiz')
 
 
 

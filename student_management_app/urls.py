@@ -58,6 +58,11 @@ urlpatterns = [
     path('admin_get_attendance_student/', HodViews.admin_get_attendance_student, name="admin_get_attendance_student"),
     path('admin_profile/', HodViews.admin_profile, name="admin_profile"),
     path('admin_profile_update/', HodViews.admin_profile_update, name="admin_profile_update"),
+    path('add_quiz/', HodViews.add_quiz, name='add_quiz'),
+    path('add_quiz_save/', HodViews.add_quiz_save, name='add_quiz_save'),
+    path('manage_quizzes/', HodViews.manage_quizzes, name='manage_quizzes'),
+    path('add_quiz_question/', HodViews.add_quiz_question, name='add_quiz_question'),
+    path('add_quiz_question_save/', HodViews.add_quiz_question_save, name='add_quiz_question_save'),
     
 
 

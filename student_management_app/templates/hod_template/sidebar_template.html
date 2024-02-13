@@ -120,6 +120,35 @@
               </a>
             </li>
 
+            <li class="nav-item">
+              {% url 'add_quiz' as add_quiz %}
+              <a href="{{ add_quiz }}" class="nav-link {% if request.path == add_quiz %} active {% endif %}">
+                <i class="nav-icon fas fa-plus-circle"></i>
+                <p>
+                  Add Quiz
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'add_quiz_question' as add_quiz_question %}
+              <a href="{{ add_quiz_question }}" class="nav-link {% if request.path == add_quiz_question %} active {% endif %}">
+                  <i class="nav-icon fas fa-plus-circle"></i>
+                  <p>
+                      Add Quiz Question
+                  </p>
+              </a>
+          </li>
+
+            <li class="nav-item">
+              {% url 'manage_quizzes' as manage_quizzes %}
+              <a href="{{ manage_quizzes }}" class="nav-link {% if request.path == manage_quizzes %} active {% endif %}">
+                <i class="nav-icon fas fa-question-circle"></i>
+                <p>
+                  Manage Quizzes
+                </p>
+              </a>
+            </li>
 
             <li class="nav-item">
               {% url 'manage_session' as manage_session %}
